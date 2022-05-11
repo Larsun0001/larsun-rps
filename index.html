@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Larsun(RPS)</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+    <div class="container">
+  <div class="buttons">
+   <button class="selection" type="submit" data-selectio="rock">✊</button>
+   <button class="selection" type="submit" data-selectio="paper">🖐️</button>
+   <button class="selection" type="submit" data-selectio="sis">✌️</button>
+  </div>
+   <div class="results">
+    <div class="content">
+     You
+     <span class="show-results" data-your-score>0</span>
+    </div>
+    <div class="content" data-final>
+     Comp
+     <span class="show-results" data-comp-score>0</span>
+    </div>
+    <!--<div class="result-selection winner">✌️</div>
+    <div class="result-selection">✊</div>
+-->   </div>
+ </div>
+        <script>
+            const selections = document.querySelectorAll('.selection');
+const showGame = document.querySelector('.show-game');
+const finalCho = document.querySelector('[data-final]');
+const playerScore = document.querySelector('[data-your-score]');
+const compScore = document.querySelector('[data-comp-score]')
+const SELECTION = [
+ {
+  name: 'rock',
+  emoji: '✊',
+  beat: 'sis'
+ },
+ {
+  name: 'paper',
+  emoji: '🖐️',
+  beat: 'rock'
+ },
+ {
+  name: 'sis',
+  emoji: '✌️',
+  beat: 'paper'
+ }
+ ]
+selections.forEach(select => {
+ select.addEventListener('click', () => {
+  const data = select.dataset.selectio;
+  const check = SELECTION.find(select => select.name === data);
+  navigator.vibrate(100,300)
+  checkData(check)
+ })
+})
+
+function checkData(data) {
+ const random = randSelect();
+ const playerWin = isWinner(data, random);
+ const compWin = isWinner(random, data);
+ createText(random, compWin);
+ createText(data, playerWin);
+ if (playerWin) increScore(playerScore);
+ if (compWin) increScore(compScore);
+}
+
+function increScore(span) {
+ span.innerText = parseInt(span.innerText) + 1;
+}
+
+function createText(select, winner) {
+ const div = document.createElement('div');
+ div.innerText = select.emoji;
+ div.classList.add('result-selection');
+ if (winner) div.classList.add('winner');
+ finalCho.after(div);
+}
+
+function isWinner(selection, oponentSelection) {
+ return selection.beat === oponentSelection.name;
+}
+
+function randSelect() {
+ const rand = Math.floor(Math.random() * SELECTION.length);
+ return SELECTION[rand];
+}
+        </script>
+    </body>
+</html>
